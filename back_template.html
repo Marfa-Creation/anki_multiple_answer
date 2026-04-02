@@ -1,0 +1,52 @@
+<!-- Answer checking things -->
+<script>
+
+var answers_str = new DOMParser()
+	// replace the text between "{{" and "}}" with the name of the field you use for the answer
+  .parseFromString("{{Word Meaning}}", "text/html") 
+  .body.textContent;
+
+var answers = answers_str.split(',').map((x) => x.trim().replace(/\u00A0/g, ' '));
+
+var user_answers_html = document.getElementById("typeans").children;
+var user_answers_str = "";
+
+for (i = 0; i < user_answers_html.length; i++) {
+
+  if (user_answers_html[i].tagName === "BR") {
+    break;
+  }
+
+  if (user_answers_html[i].className !== "typeMissed") {
+    user_answers_str += user_answers_html[i].innerText;
+  }
+}
+
+var user_answers = user_answers_str.split(',').map((x) => x.trim().replace(/\u00A0/g, ' '));
+
+var exists = new Array();
+
+var d = document.getElementById('typeans');
+
+var new_input = "";
+
+for (i = 0; i < user_answers.length; i++) {
+	var elem;
+
+	var separator = (i === 0)? '' : ',';
+
+	if (answers.includes(user_answers[i])) {
+		exists.push(user_answers[i]);
+		elem = separator+"<span class='correct'>"+user_answers[i]+"</span>";
+	}	else {
+		elem = separator+"<span class='incorrect'>"+user_answers[i]+"</span>";
+	}
+
+	new_input += elem;
+}
+
+d.innerHTML = new_input;
+
+var sample = Array.from(exists);
+
+</script>
